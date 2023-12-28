@@ -1,0 +1,22 @@
+{% extends "baseTemplates/index.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container text-center">
+    <h1 class="display-5 fw-semibold my-5">Leaderboard</h1>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3">
+        {% for rank in user_rank %}
+        <div class="col my-4 position-relative">
+            <img src="{{rank.user.registermodel.profile_img.url}}" alt="profile-image" class="profile rounded-circle border border-primary " height="200" width="200">
+            <h4>@{{rank.user.username}} <span class="text-success position-absolute top-0 translate-middle rounded bg-primary text-light p-1 fs-5">{{rank.rank}}</span></h4>
+            
+            <a href="{% url "profile" rank.user.username %}" class="btn btn-secondary">View Profile</a>
+        </div>
+        {% endfor %}
+
+        
+    </div>
+</div>
+
+{% endblock content %}

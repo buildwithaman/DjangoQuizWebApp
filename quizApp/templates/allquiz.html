@@ -1,0 +1,84 @@
+{% extends 'baseTemplates/index.html' %}
+{% load static %}
+{% load mathfilters %}
+{% block content %}
+
+<div class="container my-5">
+    <h1 class="display-5 text-center">All Quizzes</h1>
+    {% if messages %}
+      {% for message in messages %}
+        <p class="text-danger text-center">{{message}}</p>
+      
+      {% endfor %}
+    {% endif %}
+    <a href="{% url "search" " " %}" class="btn btn-light">All Quiz</a>
+    
+    {% for category in categories %}
+    <a href="{% url "search" category.category_name %}" class="btn btn-light ms-2">{{category.category_name}}</a>
+
+    {% endfor %}
+  
+    
+    <form class="d-flex my-3" role="search" method="GET" action="{% url "search" "  " %}">
+      <input class="form-control me-2" name="q" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+  </div>
+
+  <div class="container">
+    <div class="row" >
+      {% if quizzes %}
+      {% for quiz in quizzes %}
+      <div class="col m-2">
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">{{quiz.title|truncatewords:2}}</h5>
+            <p class="card-text">Total Questions: {{quizzes|length}}</p>
+            
+            <p class="card-text">Created By : <a  href="{% url "profile" quiz.created_by.username %}">{{quiz.created_by.get_full_name}}</a></p>
+            
+            <p class="card-text">{{quiz.description|truncatechars:30}}</p>
+
+            <div class="container">
+              <div class="modal fade" id="staticBackdrop{{quiz.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">{{quiz.title}}</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <p class="card-text">{{quiz.description}}</p>
+                        <p class="card-text">Created By : <a  href="{% url "profile" quiz.created_by.username %}">{{quiz.created_by.get_full_name}}</a></p>
+                        <p class="class-text">Total Questions : 4 </p>
+                        <p class="class-text">Total Marks : {{quiz.questionmodel_set.all.count|mul:quiz.pos_marks}}</p>
+                        <p class="class-text">Marks Per Question : {{quiz.pos_marks}}</p>
+                        <p class="class-text">Neg Marks Per Question : {{quiz.neg_marks}}</p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <a href="{% url "quiz" quiz.id %}" class="btn btn-outline-primary">Start Quiz</a>
+              
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            <a  class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{quiz.id}}">Start Quiz</a>
+            <span class="" style="font-size:0.9vw">{{quiz.created_at|timesince}} ago</span>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+      <p class="text-center text-danger">No Quiz found</p>
+
+      {% endif %}
+    </div>
+  </div>
+
+
+
+
+{% endblock content %}

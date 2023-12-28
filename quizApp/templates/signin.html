@@ -1,0 +1,39 @@
+{% extends "baseTemplates/index.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row row-cols-sm-1 row-cols-md-3">
+        <div class="col-12"></div>
+        <div class="col-12">
+            <h1 class="display-5 text-center my-5">Login Page</h1>
+            <form action="" method="POST" novalidate>
+                {% csrf_token %}
+        
+                {% if messages %}
+                {% for message in messages %}
+                    <p class="text-center text-success">{{message}}</p>
+                {% endfor %}
+                {% endif %}
+        
+                {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                    <p class="text-danger text-center alert alert-info">{{error}}</p>
+                {% endfor %}
+                {% endif %}
+        
+                {% for field in form %}
+                {{field.label_tag}} <br> {{field}} <p class="text-danger">{{field.errors|striptags}}</p>
+                {% endfor %}
+                <p>Don't have account <a href="{% url "register" %}">Register</a></p>
+                <div class="text-center"><input type="submit" value="Login" name="submit" class="btn btn-primary"></div>
+                
+            </form>
+        </div>
+        <div class="col-12"></div>
+    </div>
+    
+</div>
+
+{% endblock content %}

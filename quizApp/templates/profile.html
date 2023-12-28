@@ -1,0 +1,94 @@
+{% extends "baseTemplates/index.html" %}
+{% load static %}
+{% load mathfilters %}
+{% block content %}
+
+<div class="profile container">
+    
+
+    <div class="profile-heading text-center my-5">
+        <h1 class="display-5">{{profile.username}}'s Profile</h1>
+        {% if messages %}
+        {% for message in messages %}
+            <p class="text-center text-success">{{message}}</p>
+        {% endfor %}
+    {% endif %}
+        {% if profile.username == request.user.username %}
+        <div class="btn-group" role="group" aria-label="Basic outlined example">
+            <a href="{% url "editprofile" %}" class="btn btn-outline-success">Edit</a>
+            <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal{{request.user.id}}">Delete</a>
+        </div>
+        <a href="{% url "addquiz" %}" class="btn btn-outline-primary ms-3">Add a Quiz</a>
+        
+        {% endif %}
+    </div>
+
+    <div class="profile-info row row-cols-sm-1 row-cols-md-2 row-cols-lg-2">
+        <div class="col-12 text-center">
+            <img src="{{profile.registermodel.profile_img.url}}" alt="" class="rounded-circle border border-primary" height="200" width="200">
+            <h3>@{{profile.username}}</h3>
+        </div>
+        <div class="col-12 d-flex flex-column justify-content-center">
+            <h3>{{profile.get_full_name}}</h3>
+            <p>{{profile.registermodel.gender}}</p>
+            <p>{{profile.registermodel.college_name}}</p>
+            <p>{{profile.registermodel.bio}}</p>
+        </div>
+    </div>
+</div>
+<div class="container attended-quiz-info my-5">
+    <div class="row row-cols-sm-1 row-cols-md-1 row-cols-lg-2">
+        
+        <div class="col-12 text-center">
+            <h3>Quiz Attended</h3>
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">S.No..</th>
+                    <th scope="col">Quiz</th>
+                    <th scope="col">Marks</th>
+                    <th scope="col">Date of Attempt</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for attended  in quiz_attended %}
+                  <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{attended.quiz.title}}</td>
+                    <td>{{attended.score}}/{{attended.quiz.questionmodel_set.all.count|mul:attended.quiz.pos_marks}}</td>
+                    <td>{{attended.submitted_at}}</td>
+                  </tr>
+                  {% endfor %}
+
+                </tbody>
+              </table>
+        </div>
+        <div class="col-12">
+            <h3 class="text-center">Your Performance</h3>
+        </div>
+    </div>
+
+    <!-- Pop up for deleting user -->
+    <div class="container">
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal{{request.user.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+              <h1 class="modal-title fs-4" id="exampleModalLabel">Alert !!!</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <p class="text-center text-danger fs-4">Are Sure Want To Delete Your Account id</p>
+              </div>
+              <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <a href="{% url "delete" %}" class="btn btn-primary">Delete Account</a>
+              </div>
+          </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+{% endblock content %}
